@@ -1,0 +1,26 @@
+program ntdll_RtlGetNtVersionNumbers;
+
+{$mode delphi}
+
+uses SysUtils;
+
+procedure RtlGetNtVersionNumbers(out MajorVersion: DWord; out MinorVersion: DWord; out Build: DWord); stdcall; external 'ntdll.dll';
+
+procedure Println(Text: String; Value: DWord);
+begin
+  Writeln(Format(Text + ': %d', [Value]));
+end;
+
+var
+  MajorVersion, MinorVersion: DWord;
+  BuildNumberRec: packed record
+    BuildNumber: Word;
+    Build: Word;
+  end;
+  Build: Dword absolute BuildNumberRec;
+begin
+  RtlGetNtVersionNumbers(MajorVersion, MinorVersion, Build);
+  Println('Major version', MajorVersion);
+  Println('Minor version', MinorVersion);
+  Println('Build number', BuildNumberRec.BuildNumber);
+end.
